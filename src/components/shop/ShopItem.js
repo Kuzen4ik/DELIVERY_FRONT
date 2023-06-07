@@ -1,25 +1,20 @@
-// .shopItem {
-//     width: 100%;
-//     border: 1px solid black;
-//     border-radius: 10px;
-//     padding: 3px 0;
-//   }
-
 import styled from "@emotion/styled";
 
 const ShopItemWrapper = styled.button`
   cursor: pointer;
   width: 100%;
   border: 1px solid black;
-  /* text-decoration: none; */
   background: none;
   padding: 10px 4px;
   border-radius: 7px;
+  position: relative;
 
   &:hover {
     background: rgba(0, 0, 0, 0.3);
   }
 
+  .deleteBtn {
+  }
   &.disabled {
     cursor: default;
   }

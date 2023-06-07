@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
 import { TextField } from "@mui/material";
-import { useState } from "react";
 
-const Wrapper = styled.div`
+const ShoppingCartFormWrapper = styled.div`
   max-width: 48%;
   width: 100%;
   height: 100%;
@@ -13,23 +12,17 @@ const Wrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 20px;
 `;
 
-const ShoppingCartForm = () => {
-  const [value, setValue] = useState({
-    address: "",
-    email: "",
-    phone: "",
-    name: "",
-  });
-
+const ShoppingCartForm = ({ value, setValue }) => {
   const onChangeHandler = (event, key) => {
     setValue((prev) => ({ ...prev, [key]: event.target.value }));
   };
 
   return (
-    <Wrapper>
+    <ShoppingCartFormWrapper>
       <TextField
         label="Address"
         placeholder="Address"
@@ -43,8 +36,8 @@ const ShoppingCartForm = () => {
         placeholder="Email"
         type="email"
         fullWidth
-        value={value.email}
-        onChange={(e) => onChangeHandler(e, "email")}
+        value={value.userEmail}
+        onChange={(e) => onChangeHandler(e, "userEmail")}
       />
 
       <TextField
@@ -60,10 +53,10 @@ const ShoppingCartForm = () => {
         placeholder="Name"
         type="text"
         fullWidth
-        value={value.address}
+        value={value.name}
         onChange={(e) => onChangeHandler(e, "name")}
       />
-    </Wrapper>
+    </ShoppingCartFormWrapper>
   );
 };
 

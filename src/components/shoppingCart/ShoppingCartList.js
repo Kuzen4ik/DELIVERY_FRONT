@@ -20,42 +20,44 @@ const ShoppingCartListWrapper = styled.div`
 `;
 
 const ShoppingCartList = () => {
-  const { shoppingCard, setShoppingCard } = useContext(GlobalContext);
+  const { shoppingCart, setShoppingCart } = useContext(GlobalContext);
 
   const removeFoodFromCart = (food) => {
-    let shoppingCardFoodsCopy = [...shoppingCard.foods];
+    let shoppingCartFoodsCopy = [...shoppingCart.foods];
     if (food.count === 1) {
-      shoppingCardFoodsCopy = shoppingCard.foods.filter(
+      shoppingCartFoodsCopy = shoppingCart.foods.filter(
         ({ id }) => food.id !== id
       );
     } else {
-      const idx = shoppingCardFoodsCopy.findIndex(({ id }) => id === food.id);
-      shoppingCardFoodsCopy[idx].count -= 1;
+      const idx = shoppingCartFoodsCopy.findIndex(({ id }) => id === food.id);
+      shoppingCartFoodsCopy[idx].count -= 1;
     }
 
-    setShoppingCard({
-      foods: [...shoppingCardFoodsCopy],
-      price: shoppingCard.price - food.price,
+    setShoppingCart({
+      foods: [...shoppingCartFoodsCopy],
+      price: shoppingCart.price - food.price,
     });
   };
 
   const addFoodFromCart = (food) => {
-    const shoppingCardFoodsCopy = [...shoppingCard.foods];
-    const idx = shoppingCardFoodsCopy.findIndex(({ id }) => id === food.id);
-    shoppingCardFoodsCopy[idx].count += 1;
-    setShoppingCard({
-      foods: [...shoppingCardFoodsCopy],
-      price: shoppingCard.price + food.price,
+    const shoppingCartFoodsCopy = [...shoppingCart.foods];
+    const idx = shoppingCartFoodsCopy.findIndex(({ id }) => id === food.id);
+    shoppingCartFoodsCopy[idx].count += 1;
+    setShoppingCart({
+      foods: [...shoppingCartFoodsCopy],
+      price: shoppingCart.price + food.price,
     });
   };
+
   return (
     <ShoppingCartListWrapper>
       <div className="cartList">
-        {shoppingCard.foods.map((item) => (
+        {shoppingCart.foods.map((item) => (
           <ShoppingCartItem
             key={item.id}
-            title={item.title}
+            name={item.name}
             price={item.price}
+            image={item.image}
             count={item.count}
             addHandler={() => addFoodFromCart(item)}
             removeHandler={() => removeFoodFromCart(item)}

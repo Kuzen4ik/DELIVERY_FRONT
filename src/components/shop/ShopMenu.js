@@ -1,16 +1,17 @@
 import styled from "@emotion/styled";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Button } from "@mui/material";
+
 import ShopMenuItem from "./ShopMenuItem";
 import Loader from "../Loader";
 import { GlobalContext } from "../../context/GlobalContext";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { getShopMenuAPI } from "../../api/api";
+import { deleteMenuAPI, getMenuByShopIdAPI } from "../../api/api";
+import AddFoodInMenu from "./AddFoodInMenu";
+import DeleteButton from "../UI/DeleteButton";
 
 const ShopMenuWrapper = styled.div`
   width: 100%;
   height: 100%;
-  /* display: flex;
-  gap: 30px; */
-  /* flex-wrap: wrap; */
   border: 1.5px solid black;
   border-radius: 15px;
   box-sizing: border-box;
@@ -30,79 +31,126 @@ const ShopMenuWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
   }
+
+  .addFoodBtn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+  }
 `;
 
 const ShopMenu = () => {
   const [menuItems, setMenuItems] = useState(null);
+  const [isShowAddFoodModal, setIsShowAddFoodModal] = useState(false);
+  const [isUpdateMenu, setIsUpdateMenu] = useState(false);
 
-  const { selectedShopId, shoppingCard, setShoppingCard } =
-    useContext(GlobalContext);
+  const { shoppingCart, setShoppingCart, isAdmin } = useContext(GlobalContext);
 
   const addFoodToCart = (item) => {
-    const shoppingCardFoodsCopy = [...shoppingCard.foods];
-    const idx = shoppingCardFoodsCopy.findIndex(
+    const foodCopy = { ...item };
+    delete foodCopy.createdAt;
+    const shoppingCartFoodsCopy = [...shoppingCart.foods];
+    const idx = shoppingCartFoodsCopy.findIndex(
       (selectedFood) => selectedFood.id === item.id
     );
     if (idx > -1) {
-      console.log(item);
-      shoppingCardFoodsCopy[idx].count += 1;
+      shoppingCartFoodsCopy[idx].count += 1;
     } else {
-      shoppingCardFoodsCopy.push({
-        id: item.id,
-        title: item.title,
-        price: item.price,
+      shoppingCartFoodsCopy.push({
+        ...foodCopy,
         count: 1,
       });
     }
-    setShoppingCard({
-      foods: [...shoppingCardFoodsCopy],
-      price: (shoppingCard.price += item.price),
-    });
+    setShoppingCart((prev) => ({
+      ...prev,
+      foods: [...shoppingCartFoodsCopy],
+      price: (shoppingCart.price += item.price),
+    }));
   };
 
   const getShopMenu = useCallback(async () => {
     setMenuItems(null);
     try {
-      const data = await getShopMenuAPI(selectedShopId);
-      setTimeout(() => {
-        setMenuItems(data);
-      }, 1000);
+      const { data } = await getMenuByShopIdAPI(shoppingCart.shopId);
+      setMenuItems(data);
     } catch (err) {
       console.log(err);
     }
-  }, [selectedShopId]);
+  }, [shoppingCart]);
 
   useEffect(() => {
-    if (selectedShopId) {
+    if (shoppingCart.shopId) {
       getShopMenu();
     }
-  }, [selectedShopId]);
+  }, [shoppingCart, isUpdateMenu]);
+
+  const deleteMenu = async (item) => {
+    const res = window.confirm(`Remove ${item.name}?`);
+    if (!res) {
+      return;
+    }
+    try {
+      await deleteMenuAPI(item.id);
+      setIsUpdateMenu((prev) => !prev);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const content = useMemo(() => {
     let content;
-    if (selectedShopId && !menuItems) {
+    if (shoppingCart.shopId && !menuItems) {
       content = <Loader />;
-    } else if (!selectedShopId) {
+    } else if (!shoppingCart.shopId) {
       content = <h3>Choose a store</h3>;
     } else if (menuItems) {
       content = (
-        <div className="shopMenuItems">
-          {menuItems.map((item) => (
-            <ShopMenuItem
-              key={item.id}
-              title={item.title}
-              description={item.description}
-              price={item.price}
-              onSelectHandler={() => addFoodToCart(item)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="shopMenuItems">
+            {menuItems.map((item) => (
+              <div style={{ position: "relative" }} key={item.id}>
+                <ShopMenuItem
+                  name={item.name}
+                  description={item.description}
+                  price={item.price}
+                  onSelectHandler={() => addFoodToCart(item)}
+                  image={item.image}
+                />
+                {isAdmin && <DeleteButton onClick={() => deleteMenu(item)} />}
+              </div>
+            ))}
+          </div>
+          {isAdmin && (
+            <Button
+              className="addFoodBtn"
+              variant="contained"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsShowAddFoodModal(true);
+              }}
+            >
+              Add food in menu
+            </Button>
+          )}
+        </>
       );
     }
     return content;
-  }, [selectedShopId, menuItems, shoppingCard]);
+  }, [shoppingCart, menuItems, shoppingCart, isAdmin]);
 
-  return <ShopMenuWrapper>{content}</ShopMenuWrapper>;
+  return (
+    <ShopMenuWrapper>
+      {content}
+      {isShowAddFoodModal && (
+        <AddFoodInMenu
+          onClose={() => setIsShowAddFoodModal(false)}
+          setIsUpdateMenu={setIsUpdateMenu}
+        />
+      )}
+    </ShopMenuWrapper>
+  );
 };
 
 export default ShopMenu;

@@ -1,10 +1,14 @@
 import styled from "@emotion/styled";
+import { useContext, useState } from "react";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import ShopItem from "./ShopItem";
 import Loader from "../Loader";
-import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../context/GlobalContext";
-import { useNavigate } from "react-router-dom";
-import { getShopsAPI } from "../../api/api";
+import AddShop from "./AddShop";
+import DeleteButton from "../UI/DeleteButton";
+import { deleteShopsAPI } from "../../api/api";
 
 const Wrapper = styled.div`
   max-width: 280px;
@@ -14,6 +18,7 @@ const Wrapper = styled.div`
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
+  position: relative;
 
   h2 {
     margin: 0;
@@ -26,35 +31,44 @@ const Wrapper = styled.div`
     gap: 15px;
     padding: 20px 0;
   }
+
+  .addShopBtn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 30px;
+  }
 `;
 
 const Shops = () => {
-  const [shops, setShops] = useState(null);
-  const { selectedShopId, setSelectedShopId } = useContext(GlobalContext);
+  const { shops, shoppingCart, setShoppingCart, setIsUpdateShops, isAdmin } =
+    useContext(GlobalContext);
+
+  const [isShowAddShopModal, setIsShowAddShopModal] = useState(false);
 
   const navigate = useNavigate();
 
   const onSelectShopHandler = (shopId) => {
-    if (selectedShopId === shopId) {
-      setSelectedShopId(null);
+    if (shoppingCart?.shopId === shopId) {
+      setShoppingCart({ shopId: null, foods: [], price: 0 });
       navigate("/");
     } else {
-      setSelectedShopId(shopId);
-      navigate(`/?shop=${shopId}`);
+      setShoppingCart({ shopId, foods: [], price: 0 });
     }
   };
 
-  useEffect(() => {
-    const getShops = async () => {
-      try {
-        const data = await getShopsAPI();
-        setShops(data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getShops();
-  }, []);
+  const deleteShop = async (shop) => {
+    const res = window.confirm(`Remove ${shop.name}?`);
+    if (!res) {
+      return;
+    }
+    try {
+      await deleteShopsAPI(shop.id);
+      setIsUpdateShops((prev) => !prev);
+    } catch (err) {
+      console.log(err.message || err);
+    }
+  };
 
   return (
     <Wrapper>
@@ -64,15 +78,35 @@ const Shops = () => {
       ) : (
         <div className="shopItems">
           {shops.map((shop) => (
-            <ShopItem
-              key={shop.id}
-              onSelectHandler={() => onSelectShopHandler(shop.id)}
-              title={shop.title}
-              isActive={shop.id === selectedShopId}
-              // disabled={selectedShopId && shop.id !== selectedShopId}
-            />
+            <div key={shop.id} style={{ position: "relative" }}>
+              <ShopItem
+                onSelectHandler={() => onSelectShopHandler(shop.id)}
+                title={shop.name}
+                isActive={shop.id === shoppingCart?.shopId}
+                disabled={
+                  shoppingCart?.foods.length && shoppingCart?.shopId !== shop.id
+                }
+              />
+              {isAdmin && <DeleteButton onClick={() => deleteShop(shop)} />}
+            </div>
           ))}
         </div>
+      )}
+      {isAdmin && (
+        <Button
+          className="addShopBtn"
+          variant="contained"
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsShowAddShopModal(true);
+          }}
+        >
+          Add Shop
+        </Button>
+      )}
+      {isShowAddShopModal && (
+        <AddShop onClose={() => setIsShowAddShopModal(false)} />
       )}
     </Wrapper>
   );
