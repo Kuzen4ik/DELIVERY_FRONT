@@ -1,57 +1,55 @@
-export const getShopsAPI = async () => {
-  return [
-    { id: 1, title: "Mk" },
-    { id: 2, title: "KFC" },
-  ];
+import axios from "../utils/axios";
+
+// SHOPS
+
+export const getShopsAPI = async () => axios.get("/api/shops");
+
+export const postShopsAPI = async (data) => axios.post("/api/shops", data);
+
+export const deleteShopsAPI = async (shopId) =>
+  axios.delete(`/api/shops/${shopId}`);
+
+// MENU
+
+export const postMenuAPI = async (shopId, sendData) =>
+  axios.post(`/api/menu/${shopId}`, sendData);
+
+export const getMenuByShopIdAPI = async (shopId) =>
+  axios.get(`/api/menu/${shopId}`);
+
+export const deleteMenuAPI = async (menuId) =>
+  axios.delete(`/api/menu/${menuId}`);
+
+// ORDERS
+
+export const postOrdersAPI = async (sendData) =>
+  axios.post("/api/orders", sendData);
+
+export const getOrdersAPI = async (sendData) => {
+  let url = "/api/orders?";
+
+  if (sendData?.email) {
+    url += `email=${sendData.email}&`;
+  }
+  if (sendData?.phone) {
+    url += `phone=${sendData.phone}`;
+  }
+  return axios.get(url);
 };
 
-export const getShopMenuAPI = async (shopId) => {
-  return [
-    {
-      id: 101,
-      title: "test1",
-      description:
-        "description description description description description",
-      price: 100,
-    },
+// COUPONS
 
-    {
-      id: 102,
-      title: "test2",
-      description:
-        "description description description description description",
-      price: 100,
-    },
+export const getCouponsAPI = async (code) => {
+  let url = "/api/coupons/?";
+  if (code) {
+    url += `code=${code}`;
+  }
 
-    {
-      id: 103,
-      title: "test3",
-      description:
-        "description description description description description",
-      price: 100,
-    },
-    {
-      id: 104,
-      title: "test4",
-      description:
-        "description description description description description",
-      price: 100,
-    },
-
-    {
-      id: 105,
-      title: "test5",
-      description:
-        "description description description description description",
-      price: 100,
-    },
-
-    {
-      id: 106,
-      title: "test6",
-      description:
-        "description description description description description",
-      price: 100,
-    },
-  ];
+  return axios.get(url);
 };
+
+export const postCouponsAPI = async (sendData) =>
+  axios.post("/api/coupons", sendData);
+
+export const deleteCouponsAPI = async (code) =>
+  axios.delete(`/api/coupons/${code}`);

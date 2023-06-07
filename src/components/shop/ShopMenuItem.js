@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { Tooltip } from "@mui/material";
 import { useState } from "react";
 import Loader from "../Loader";
 
@@ -17,9 +16,12 @@ const ShopMenuItemWrapper = styled.div`
   .image {
     width: 100%;
     height: 110px;
-    background: yellowgreen;
+    background: #ebebeb;
     border-radius: 10px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
   }
 
   h5 {
@@ -52,7 +54,7 @@ const ShopMenuItemWrapper = styled.div`
   }
 `;
 
-const ShopMenuItem = ({ title, description, onSelectHandler, price }) => {
+const ShopMenuItem = ({ name, image, onSelectHandler, price }) => {
   const [disabled, setDisabled] = useState(false);
 
   const onClickAddHandler = () => {
@@ -66,22 +68,24 @@ const ShopMenuItem = ({ title, description, onSelectHandler, price }) => {
 
   return (
     <ShopMenuItemWrapper>
-      <Tooltip title={description}>
-        <div className="image"></div>
-      </Tooltip>
-      <h5>{title}</h5>
+      <div className="image">
+        <img
+          width="auto"
+          height="100%"
+          src={`${process.env.REACT_APP_API_URL}/${image}`}
+        />
+      </div>
+      <h5>{name}</h5>
       <div className="btnAddToCart">
         <p>price: {price}</p>
-        <Tooltip title="The item should be added in the Shopping Cart">
-          <button
-            className={disabled ? "disabled" : ""}
-            type="button"
-            disabled={disabled}
-            onClick={onClickAddHandler}
-          >
-            {disabled ? <Loader size={20} /> : "Add to Cart"}
-          </button>
-        </Tooltip>
+        <button
+          className={disabled ? "disabled" : ""}
+          type="button"
+          disabled={disabled}
+          onClick={onClickAddHandler}
+        >
+          {disabled ? <Loader size={20} /> : "Add to Cart"}
+        </button>
       </div>
     </ShopMenuItemWrapper>
   );

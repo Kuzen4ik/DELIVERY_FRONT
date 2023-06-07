@@ -16,8 +16,10 @@ const ShoppingCartItemWrapper = styled.div`
   .image {
     width: 55%;
     height: 100%;
-    background: yellowgreen;
     border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
   }
 
   h5 {
@@ -45,35 +47,41 @@ const ShoppingCartItemWrapper = styled.div`
       width: 30px;
       height: 30px;
       border-radius: 10px;
+      cursor: pointer;
     }
   }
 `;
 
 const ShoppingCartItem = ({
-  title,
+  name,
   price,
   count,
   addHandler,
   removeHandler,
-}) => {
-  return (
-    <ShoppingCartItemWrapper>
-      <div className="image" />
-      <div>
-        <h5>{title}</h5>
-        <p>price: {price}</p>
-        <div className="count">
-          <button type="button" onClick={addHandler}>
-            +
-          </button>
-          <h3>{count}</h3>
-          <button type="button" onClick={removeHandler}>
-            -
-          </button>
-        </div>
+  image,
+}) => (
+  <ShoppingCartItemWrapper>
+    <div className="image">
+      <img
+        width="auto"
+        height="100%"
+        src={`${process.env.REACT_APP_API_URL}/${image}`}
+      />
+    </div>
+    <div>
+      <h5>{name}</h5>
+      <p>price: {price}</p>
+      <div className="count">
+        <button type="button" onClick={addHandler}>
+          +
+        </button>
+        <h3>{count}</h3>
+        <button type="button" onClick={removeHandler}>
+          -
+        </button>
       </div>
-    </ShoppingCartItemWrapper>
-  );
-};
+    </div>
+  </ShoppingCartItemWrapper>
+);
 
 export default ShoppingCartItem;
