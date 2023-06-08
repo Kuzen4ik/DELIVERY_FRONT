@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { useContext, useState } from "react";
 import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 import ShopItem from "./ShopItem";
 import Loader from "../Loader";
@@ -46,12 +45,9 @@ const Shops = () => {
 
   const [isShowAddShopModal, setIsShowAddShopModal] = useState(false);
 
-  const navigate = useNavigate();
-
   const onSelectShopHandler = (shopId) => {
     if (shoppingCart?.shopId === shopId) {
       setShoppingCart({ shopId: null, foods: [], price: 0 });
-      navigate("/");
     } else {
       setShoppingCart({ shopId, foods: [], price: 0 });
     }
@@ -77,19 +73,21 @@ const Shops = () => {
         <Loader />
       ) : (
         <div className="shopItems">
-          {shops?.map((shop) => (
-            <div key={shop.id} style={{ position: "relative" }}>
-              <ShopItem
-                onSelectHandler={() => onSelectShopHandler(shop.id)}
-                title={shop.name}
-                isActive={shop.id === shoppingCart?.shopId}
-                disabled={
-                  shoppingCart?.foods.length && shoppingCart?.shopId !== shop.id
-                }
-              />
-              {isAdmin && <DeleteButton onClick={() => deleteShop(shop)} />}
-            </div>
-          ))}
+          {Array.isArray(shops) &&
+            shops.map((shop) => (
+              <div key={shop.id} style={{ position: "relative" }}>
+                <ShopItem
+                  onSelectHandler={() => onSelectShopHandler(shop.id)}
+                  title={shop.name}
+                  isActive={shop.id === shoppingCart?.shopId}
+                  disabled={
+                    shoppingCart?.foods.length &&
+                    shoppingCart?.shopId !== shop.id
+                  }
+                />
+                {isAdmin && <DeleteButton onClick={() => deleteShop(shop)} />}
+              </div>
+            ))}
         </div>
       )}
       {isAdmin && (

@@ -61,12 +61,13 @@ const Coupons = () => {
 
   return (
     <CouponsWrapper>
-      {coupons?.map((coupon) => (
-        <div key={coupon.id} style={{ position: "relative" }}>
-          <Coupon code={coupon.code} discount={coupon.discount} />
-          {isAdmin && <DeleteButton onClick={() => deleteMenu(coupon)} />}
-        </div>
-      ))}
+      {Array.isArray(coupons) &&
+        coupons?.map((coupon) => (
+          <div key={coupon.id} style={{ position: "relative" }}>
+            <Coupon code={coupon.code} discount={coupon.discount} />
+            {isAdmin && <DeleteButton onClick={() => deleteMenu(coupon)} />}
+          </div>
+        ))}
       {isAdmin && (
         <Button
           className="createCoupon"
