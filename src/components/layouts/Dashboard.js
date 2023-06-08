@@ -95,7 +95,7 @@ const Dashboard = ({ children }) => {
   return (
     <DashboardWrapper>
       <div className="items">
-        {menuItems.map((item) => (
+        {menuItems?.map((item) => (
           <div key={item.title} className="menuItem">
             <Link to={item.href}>{item.title}</Link>
             {item.count ? (

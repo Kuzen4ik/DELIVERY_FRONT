@@ -52,7 +52,7 @@ const ShoppingCartList = () => {
   return (
     <ShoppingCartListWrapper>
       <div className="cartList">
-        {shoppingCart.foods.map((item) => (
+        {shoppingCart.foods?.map((item) => (
           <ShoppingCartItem
             key={item.id}
             name={item.name}

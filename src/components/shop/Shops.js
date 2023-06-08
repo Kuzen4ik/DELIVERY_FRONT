@@ -77,7 +77,7 @@ const Shops = () => {
         <Loader />
       ) : (
         <div className="shopItems">
-          {shops.map((shop) => (
+          {shops?.map((shop) => (
             <div key={shop.id} style={{ position: "relative" }}>
               <ShopItem
                 onSelectHandler={() => onSelectShopHandler(shop.id)}

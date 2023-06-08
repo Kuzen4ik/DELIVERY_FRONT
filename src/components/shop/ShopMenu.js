@@ -108,7 +108,7 @@ const ShopMenu = () => {
       content = (
         <>
           <div className="shopMenuItems">
-            {menuItems.map((item) => (
+            {menuItems?.map((item) => (
               <div style={{ position: "relative" }} key={item.id}>
                 <ShopMenuItem
                   name={item.name}

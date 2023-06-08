@@ -75,7 +75,7 @@ const OrderTable = ({ orders }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.map((order, index) => (
+          {orders?.map((order, index) => (
             <React.Fragment key={order.id}>
               <TableRow
                 hover
@@ -117,7 +117,7 @@ const OrderTable = ({ orders }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {parseItems(order.items).map((item, i) => (
+                      {parseItems(order.items)?.map((item, i) => (
                         <TableRow
                           key={item.id}
                           style={{ background: "#fcfcfc" }}
