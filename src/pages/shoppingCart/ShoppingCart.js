@@ -3,9 +3,10 @@ import { Button } from "@mui/material";
 
 import ShoppingCartForm from "../../components/shoppingCart/ShoppingCartForm";
 import ShoppingCartList from "../../components/shoppingCart/ShoppingCartList";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { GlobalContext } from "../../context/GlobalContext";
 import { deleteCouponsAPI, getCouponsAPI, postOrdersAPI } from "../../api/api";
+import { validateEmail } from "../../utils/helpers";
 
 const ShoppingCartWrapper = styled.div`
   height: 100%;
@@ -35,7 +36,7 @@ const ShoppingCartWrapper = styled.div`
 `;
 
 const ShoppingCart = () => {
-  const [disabled, setDisabled] = useState(true);
+  // const [disabled, setDisabled] = useState(true);
   const [valueForm, setValueForm] = useState({
     address: "",
     userEmail: "",
@@ -76,19 +77,30 @@ const ShoppingCart = () => {
     }
   };
 
-  useEffect(() => {
+  const checkValidationForm = useCallback(() => {
+    if (!validateEmail(valueForm.userEmail)) {
+      return false;
+    } else if (!valueForm.address.length) {
+      return false;
+    } else if (!valueForm.name.length) {
+      return false;
+    } else if (!valueForm.phone.length) {
+      return false;
+    }
+    return true;
+  }, [valueForm]);
+
+  const disabled = useMemo(() => {
     let disabledCheck = false;
-    Object.keys(valueForm).forEach((key) => {
-      if (!valueForm[key].length) {
-        disabledCheck = true;
-      }
-    });
+    if (!checkValidationForm()) {
+      disabledCheck = true;
+    }
 
     if (!shoppingCart?.foods.length) {
       disabledCheck = true;
     }
 
-    setDisabled(disabledCheck);
+    return disabledCheck;
   }, [valueForm, shoppingCart]);
 
   const totalPrice = useMemo(() => {
@@ -101,6 +113,26 @@ const ShoppingCart = () => {
     return shoppingCart.price;
   }, [coupon, shoppingCart]);
 
+  const clearFormAndCart = useCallback(() => {
+    setShoppingCart({
+      shopId: null,
+      foods: [],
+      price: 0,
+    });
+    setValueForm({
+      address: "",
+      userEmail: "",
+      phone: "",
+      name: "",
+    });
+    setCoupon({
+      code: "",
+      decryption: "",
+      discount: null,
+      status: false,
+    });
+  }, []);
+
   const postOrders = async () => {
     const sendData = {
       ...valueForm,
@@ -110,13 +142,11 @@ const ShoppingCart = () => {
     };
 
     try {
-      await deleteCouponsAPI(coupon.code);
+      if (coupon.status) {
+        await deleteCouponsAPI(coupon.code);
+      }
       await postOrdersAPI(sendData);
-      setShoppingCart({
-        shopId: null,
-        foods: [],
-        price: 0,
-      });
+      clearFormAndCart();
       setIsUpdateCoupons((prev) => !prev);
     } catch (err) {
       console.log(err);

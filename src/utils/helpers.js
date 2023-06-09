@@ -20,3 +20,8 @@ export const toDate = (date) => {
     minute: "2-digit",
   }).format(new Date(date));
 };
+
+export const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};

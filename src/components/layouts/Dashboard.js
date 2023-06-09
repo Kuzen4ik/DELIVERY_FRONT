@@ -3,6 +3,7 @@ import { useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalContext";
 import { Button } from "@mui/material";
+import SignIn from "../signIn/SignIn";
 
 const DashboardWrapper = styled.div`
   height: 100vh;
@@ -107,6 +108,7 @@ const Dashboard = ({ children }) => {
             )}
           </div>
         ))}
+        <SignIn />
         <Button
           className="btn"
           type="button"

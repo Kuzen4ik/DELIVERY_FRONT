@@ -49,6 +49,7 @@ const Modal = ({
   errorMessage,
   disabled,
   onSubmitHandler,
+  btnText = "add",
 }) => {
   const contentRef = useRef(null);
 
@@ -73,7 +74,7 @@ const Modal = ({
             variant="contained"
             onClick={onSubmitHandler}
           >
-            Add
+            {btnText}
           </Button>
         </div>
       </div>

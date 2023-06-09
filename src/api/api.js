@@ -53,3 +53,11 @@ export const postCouponsAPI = async (sendData) =>
 
 export const deleteCouponsAPI = async (code) =>
   axios.delete(`/api/coupons/${code}`);
+
+// AUTH
+
+export const postAuthRegisterAPI = async (sendData) =>
+  axios.post("/api/auth/register", sendData);
+
+export const postAuthLoginAPI = async (sendData) =>
+  axios.post("/api/auth/login", sendData);
