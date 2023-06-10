@@ -2,8 +2,9 @@ import styled from "@emotion/styled";
 import { useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalContext";
-import { Button } from "@mui/material";
 import SignIn from "../signIn/SignIn";
+import { AuthContext } from "../../context/JWTContext";
+import { Button } from "@mui/material";
 
 const DashboardWrapper = styled.div`
   height: 100vh;
@@ -50,7 +51,7 @@ const DashboardWrapper = styled.div`
     }
   }
 
-  .btn {
+  .signInBtn {
     position: absolute;
     top: 50%;
     transform: translateY(-50);
@@ -67,7 +68,8 @@ const DashboardWrapper = styled.div`
 `;
 
 const Dashboard = ({ children }) => {
-  const { shoppingCart, isAdmin, setIsAdmin } = useContext(GlobalContext);
+  const { shoppingCart } = useContext(GlobalContext);
+  const { isAdmin, signOut } = useContext(AuthContext);
 
   const menuItems = useMemo(() => {
     const items = [
@@ -108,14 +110,15 @@ const Dashboard = ({ children }) => {
             )}
           </div>
         ))}
-        <SignIn />
-        <Button
-          className="btn"
-          type="button"
-          onClick={() => setIsAdmin(!isAdmin)}
-        >
-          {isAdmin ? "Admin" : "User"}
-        </Button>
+        <div className="signInBtn">
+          {isAdmin ? (
+            <Button type="button" onClick={signOut}>
+              Sign Out
+            </Button>
+          ) : (
+            <SignIn />
+          )}
+        </div>
       </div>
 
       <div className="content">{children}</div>

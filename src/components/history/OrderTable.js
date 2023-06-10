@@ -10,6 +10,7 @@ import {
 import React, { useContext, useState } from "react";
 import { GlobalContext } from "../../context/GlobalContext";
 import { toDate } from "../../utils/helpers";
+import { AuthContext } from "../../context/JWTContext";
 
 const Wrapper = styled.div`
   border-bottom: 1.5px solid black;
@@ -27,7 +28,8 @@ const Wrapper = styled.div`
 `;
 
 const OrderTable = ({ orders }) => {
-  const { isAdmin, shops } = useContext(GlobalContext);
+  const { shops } = useContext(GlobalContext);
+  const { isAdmin } = useContext(AuthContext);
   const [expandedId, setExpandedId] = useState([]);
 
   if (!orders) {
