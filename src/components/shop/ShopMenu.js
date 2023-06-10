@@ -8,6 +8,7 @@ import { GlobalContext } from "../../context/GlobalContext";
 import { deleteMenuAPI, getMenuByShopIdAPI } from "../../api/api";
 import AddFoodInMenu from "./AddFoodInMenu";
 import DeleteButton from "../UI/DeleteButton";
+import { AuthContext } from "../../context/JWTContext";
 
 const ShopMenuWrapper = styled.div`
   width: 100%;
@@ -45,7 +46,8 @@ const ShopMenu = () => {
   const [isShowAddFoodModal, setIsShowAddFoodModal] = useState(false);
   const [isUpdateMenu, setIsUpdateMenu] = useState(false);
 
-  const { shoppingCart, setShoppingCart, isAdmin } = useContext(GlobalContext);
+  const { shoppingCart, setShoppingCart } = useContext(GlobalContext);
+  const { isAdmin } = useContext(AuthContext);
 
   const addFoodToCart = (item) => {
     const foodCopy = { ...item };

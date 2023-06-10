@@ -6,7 +6,6 @@ export const GlobalContext = createContext();
 
 const GlobalContextProvider = ({ children }) => {
   const [shops, setShops] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isUpdateShops, setIsUpdateShops] = useState(false);
   const [isUpdateCoupons, setIsUpdateCoupons] = useState(false);
 
@@ -53,10 +52,8 @@ const GlobalContextProvider = ({ children }) => {
       setIsUpdateShops,
       isUpdateCoupons,
       setIsUpdateCoupons,
-      isAdmin,
-      setIsAdmin,
     }),
-    [shoppingCart, shops, isUpdateShops, isUpdateCoupons, isAdmin]
+    [shoppingCart, shops, isUpdateShops, isUpdateCoupons]
   );
 
   if (!shoppingCart) {

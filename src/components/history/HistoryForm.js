@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Button, TextField } from "@mui/material";
-import { useContext, useMemo, useState } from "react";
-import { GlobalContext } from "../../context/GlobalContext";
+import { useContext, useMemo } from "react";
+import { AuthContext } from "../../context/JWTContext";
 
 const HistoryFormWrapper = styled.div`
   width: 100%;
@@ -22,7 +22,7 @@ const HistoryFormWrapper = styled.div`
 `;
 
 const HistoryForm = ({ value, setValue, onSubmitHandler }) => {
-  const { isAdmin } = useContext(GlobalContext);
+  const { isAdmin } = useContext(AuthContext);
 
   const onChangeHandler = (event, key) => {
     setValue((prev) => ({ ...prev, [key]: event.target.value }));

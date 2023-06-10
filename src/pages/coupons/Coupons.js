@@ -1,11 +1,13 @@
 import styled from "@emotion/styled";
+import { Button } from "@mui/material";
+
 import { useContext, useEffect, useState } from "react";
 import { deleteCouponsAPI, getCouponsAPI } from "../../api/api";
-import { Button } from "@mui/material";
 import CreateCoupon from "../../components/coupos/CreateCoupon";
 import { GlobalContext } from "../../context/GlobalContext";
 import Coupon from "../../components/coupos/Coupon";
 import DeleteButton from "../../components/UI/DeleteButton";
+import { AuthContext } from "../../context/JWTContext";
 
 const CouponsWrapper = styled.div`
   width: 100%;
@@ -31,8 +33,8 @@ const Coupons = () => {
   const [coupons, setCoupons] = useState([]);
   const [isShowModal, setIsShowModal] = useState(false);
 
-  const { isUpdateCoupons, setIsUpdateCoupons, isAdmin } =
-    useContext(GlobalContext);
+  const { isUpdateCoupons, setIsUpdateCoupons } = useContext(GlobalContext);
+  const { isAdmin } = useContext(AuthContext);
 
   useEffect(() => {
     const getCoupons = async () => {

@@ -8,6 +8,7 @@ import { GlobalContext } from "../../context/GlobalContext";
 import AddShop from "./AddShop";
 import DeleteButton from "../UI/DeleteButton";
 import { deleteShopsAPI } from "../../api/api";
+import { AuthContext } from "../../context/JWTContext";
 
 const Wrapper = styled.div`
   max-width: 280px;
@@ -40,8 +41,9 @@ const Wrapper = styled.div`
 `;
 
 const Shops = () => {
-  const { shops, shoppingCart, setShoppingCart, setIsUpdateShops, isAdmin } =
+  const { shops, shoppingCart, setShoppingCart, setIsUpdateShops } =
     useContext(GlobalContext);
+  const { isAdmin } = useContext(AuthContext);
 
   const [isShowAddShopModal, setIsShowAddShopModal] = useState(false);
 
