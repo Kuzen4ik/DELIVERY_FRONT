@@ -33,6 +33,7 @@ const Coupons = () => {
   const [coupons, setCoupons] = useState([]);
   const [isShowModal, setIsShowModal] = useState(false);
 
+
   const { isUpdateCoupons, setIsUpdateCoupons } = useContext(GlobalContext);
   const { isAdmin } = useContext(AuthContext);
 
@@ -63,13 +64,12 @@ const Coupons = () => {
 
   return (
     <CouponsWrapper>
-      {Array.isArray(coupons) &&
-        coupons?.map((coupon) => (
-          <div key={coupon.id} style={{ position: "relative" }}>
-            <Coupon code={coupon.code} discount={coupon.discount} />
-            {isAdmin && <DeleteButton onClick={() => deleteMenu(coupon)} />}
-          </div>
-        ))}
+      {coupons?.map((coupon) => (
+        <div key={coupon.id} style={{ position: "relative" }}>
+          <Coupon code={coupon.code} discount={coupon.discount} />
+          {isAdmin && <DeleteButton onClick={() => deleteMenu(coupon)} />}
+        </div>
+      ))}
       {isAdmin && (
         <Button
           className="createCoupon"

@@ -75,21 +75,19 @@ const Shops = () => {
         <Loader />
       ) : (
         <div className="shopItems">
-          {Array.isArray(shops) &&
-            shops.map((shop) => (
-              <div key={shop.id} style={{ position: "relative" }}>
-                <ShopItem
-                  onSelectHandler={() => onSelectShopHandler(shop.id)}
-                  title={shop.name}
-                  isActive={shop.id === shoppingCart?.shopId}
-                  disabled={
-                    shoppingCart?.foods.length &&
-                    shoppingCart?.shopId !== shop.id
-                  }
-                />
-                {isAdmin && <DeleteButton onClick={() => deleteShop(shop)} />}
-              </div>
-            ))}
+          {shops.map((shop) => (
+            <div key={shop.id} style={{ position: "relative" }}>
+              <ShopItem
+                onSelectHandler={() => onSelectShopHandler(shop.id)}
+                title={shop.name}
+                isActive={shop.id === shoppingCart?.shopId}
+                disabled={
+                  shoppingCart?.foods.length && shoppingCart?.shopId !== shop.id
+                }
+              />
+              {isAdmin && <DeleteButton onClick={() => deleteShop(shop)} />}
+            </div>
+          ))}
         </div>
       )}
       {isAdmin && (
