@@ -62,7 +62,7 @@ const Modal = ({
           <IconButton onClick={onClose} className="iconClose">
             x
           </IconButton>
-          <h5>{title}</h5>
+          {title && <h5>{title}</h5>}
           {errorMessage && (
             <Alert mt={2} mb={3} severity="error">
               {errorMessage}

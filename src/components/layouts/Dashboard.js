@@ -92,8 +92,15 @@ const Dashboard = ({ children }) => {
       },
     ];
 
+    if (isAdmin) {
+      items.push({
+        title: "Admins",
+        href: "/admins",
+      });
+    }
+
     return items;
-  }, [shoppingCart]);
+  }, [shoppingCart, isAdmin]);
 
   return (
     <DashboardWrapper>

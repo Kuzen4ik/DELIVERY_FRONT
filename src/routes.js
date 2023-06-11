@@ -1,3 +1,4 @@
+import Admins from "./pages/admins/Admins";
 import Coupons from "./pages/coupons/Coupons";
 import History from "./pages/histopy/History";
 import Shop from "./pages/shop/Shop";
@@ -21,6 +22,7 @@ const routes = [
     path: "/coupons",
     element: <Coupons />,
   },
+  { path: "/admins", element: <Admins /> },
 ];
 
 export default routes;

@@ -61,3 +61,10 @@ export const postAuthRegisterAPI = async (sendData) =>
 
 export const postAuthLoginAPI = async (sendData) =>
   axios.post("/api/auth/login", sendData);
+
+// ADMINS
+
+export const getAdminsAPI = async () => axios.get("/api/admins");
+
+export const deleteAdminsAPI = async (adminId) =>
+  axios.delete(`/api/admins/${adminId}`);

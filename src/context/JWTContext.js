@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, useState } from "react";
-import { postAuthLoginAPI } from "../api/api";
+import { postAuthLoginAPI, postAuthRegisterAPI } from "../api/api";
 import { setSession } from "../utils/jwt";
 
 export const AuthContext = createContext(null);
@@ -28,7 +28,14 @@ const AuthProvider = ({ children }) => {
     setIsAdmin(false);
   };
 
-  const value = useMemo(() => ({ signIn, isAdmin, signOut }), [isAdmin]);
+  const signUp = async ({ email, password }) => {
+    await postAuthRegisterAPI({ email, password });
+  };
+
+  const value = useMemo(
+    () => ({ signIn, isAdmin, signOut, signUp }),
+    [isAdmin]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
