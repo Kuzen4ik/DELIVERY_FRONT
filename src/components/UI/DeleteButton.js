@@ -7,7 +7,7 @@ const DeleteButton = ({ onClick }) => {
         e.preventDefault();
         onClick();
       }}
-      style={{ position: "absolute", top: 4, right: 4 }}
+      style={{ position: "absolute", top: 4, right: 4, cursor: "pointer" }}
     >
       X
     </button>
